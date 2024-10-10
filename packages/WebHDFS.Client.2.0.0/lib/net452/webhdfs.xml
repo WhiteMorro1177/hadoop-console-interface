@@ -1,0 +1,668 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>WebHDFS</name>
+    </assembly>
+    <members>
+        <member name="T:WebHDFS.Boolean">
+            <summary>
+            Boolean.
+            </summary>
+        </member>
+        <member name="P:WebHDFS.Boolean.boolean">
+            <summary>
+            Gets or sets a value indicating whether this <see cref="T:WebHDFS.Boolean"/> is boolean.
+            </summary>
+            <value><c>true</c> if boolean; otherwise, <c>false</c>.</value>
+        </member>
+        <member name="T:WebHDFS.ContentSummaryClass">
+            <summary>
+            https://hadoop.apache.org/docs/r2.8.0/hadoop-project-dist/hadoop-hdfs/WebHDFS.html#ContentSummary_JSON_Schema
+            </summary>
+        </member>
+        <member name="P:WebHDFS.ContentSummaryClass.ContentSummary">
+            <summary>
+            Gets or sets the content summary.
+            </summary>
+            <value>The content summary.</value>
+        </member>
+        <member name="T:WebHDFS.ARCHIVE">
+            <summary>
+            Archive.
+            </summary>
+        </member>
+        <member name="P:WebHDFS.ARCHIVE.consumed">
+            <summary>
+            Gets or sets the consumed.
+            </summary>
+            <value>The consumed.</value>
+        </member>
+        <member name="P:WebHDFS.ARCHIVE.quota">
+            <summary>
+            Gets or sets the quota.
+            </summary>
+            <value>The quota.</value>
+        </member>
+        <member name="T:WebHDFS.DISK">
+            <summary>
+            Disk.
+            </summary>
+        </member>
+        <member name="P:WebHDFS.DISK.consumed">
+            <summary>
+            Gets or sets the consumed.
+            </summary>
+            <value>The consumed.</value>
+        </member>
+        <member name="P:WebHDFS.DISK.quota">
+            <summary>
+            Gets or sets the quota.
+            </summary>
+            <value>The quota.</value>
+        </member>
+        <member name="T:WebHDFS.SSD">
+            <summary>
+            SSD.
+            </summary>
+        </member>
+        <member name="P:WebHDFS.SSD.consumed">
+            <summary>
+            Gets or sets the consumed.
+            </summary>
+            <value>The consumed.</value>
+        </member>
+        <member name="P:WebHDFS.SSD.quota">
+            <summary>
+            Gets or sets the quota.
+            </summary>
+            <value>The quota.</value>
+        </member>
+        <member name="T:WebHDFS.TypeQuota">
+            <summary>
+            Type quota.
+            </summary>
+        </member>
+        <member name="P:WebHDFS.TypeQuota.ARCHIVE">
+            <summary>
+            Gets or sets the archive.
+            </summary>
+            <value>The archive.</value>
+        </member>
+        <member name="P:WebHDFS.TypeQuota.DISK">
+            <summary>
+            Gets or sets the disk.
+            </summary>
+            <value>The disk.</value>
+        </member>
+        <member name="P:WebHDFS.TypeQuota.SSD">
+            <summary>
+            Gets or sets the ssd.
+            </summary>
+            <value>The ssd.</value>
+        </member>
+        <member name="T:WebHDFS.ContentSummary">
+            <summary>
+            Content summary.
+            </summary>
+        </member>
+        <member name="P:WebHDFS.ContentSummary.directoryCount">
+            <summary>
+            Gets or sets the directory count.
+            </summary>
+            <value>The directory count.</value>
+        </member>
+        <member name="P:WebHDFS.ContentSummary.fileCount">
+            <summary>
+            Gets or sets the file count.
+            </summary>
+            <value>The file count.</value>
+        </member>
+        <member name="P:WebHDFS.ContentSummary.length">
+            <summary>
+            Gets or sets the length.
+            </summary>
+            <value>The length.</value>
+        </member>
+        <member name="P:WebHDFS.ContentSummary.quota">
+            <summary>
+            Gets or sets the quota.
+            </summary>
+            <value>The quota.</value>
+        </member>
+        <member name="P:WebHDFS.ContentSummary.spaceConsumed">
+            <summary>
+            Gets or sets the space consumed.
+            </summary>
+            <value>The space consumed.</value>
+        </member>
+        <member name="P:WebHDFS.ContentSummary.spaceQuota">
+            <summary>
+            Gets or sets the space quota.
+            </summary>
+            <value>The space quota.</value>
+        </member>
+        <member name="P:WebHDFS.ContentSummary.typeQuota">
+            <summary>
+            Gets or sets the type quota.
+            </summary>
+            <value>The type quota.</value>
+        </member>
+        <member name="T:WebHDFS.FileChecksumClass">
+            <summary>
+            https://hadoop.apache.org/docs/r2.8.0/hadoop-project-dist/hadoop-hdfs/WebHDFS.html#FileChecksum_JSON_Schema
+            </summary>
+        </member>
+        <member name="P:WebHDFS.FileChecksumClass.FileChecksum">
+            <summary>
+            Gets or sets the file checksum.
+            </summary>
+            <value>The file checksum.</value>
+        </member>
+        <member name="T:WebHDFS.FileChecksum">
+            <summary>
+            File checksum.
+            </summary>
+        </member>
+        <member name="P:WebHDFS.FileChecksum.algorithm">
+            <summary>
+            Gets or sets the algorithm.
+            </summary>
+            <value>The algorithm.</value>
+        </member>
+        <member name="P:WebHDFS.FileChecksum.bytes">
+            <summary>
+            Gets or sets the bytes.
+            </summary>
+            <value>The bytes.</value>
+        </member>
+        <member name="P:WebHDFS.FileChecksum.length">
+            <summary>
+            Gets or sets the length.
+            </summary>
+            <value>The length.</value>
+        </member>
+        <member name="M:WebHDFS.FileChecksum.ToString">
+            <summary>
+            Returns a <see cref="T:System.String"/> that represents the current <see cref="T:WebHDFS.FileChecksum"/>.
+            </summary>
+            <returns>A <see cref="T:System.String"/> that represents the current <see cref="T:WebHDFS.FileChecksum"/>.</returns>
+        </member>
+        <member name="T:WebHDFS.FileStatusClass">
+            <summary>
+            https://hadoop.apache.org/docs/r2.8.0/hadoop-project-dist/hadoop-hdfs/WebHDFS.html#FileStatus_Properties
+            </summary>
+        </member>
+        <member name="P:WebHDFS.FileStatusClass.FileStatus">
+            <summary>
+            Gets or sets the file status.
+            </summary>
+            <value>The file status.</value>
+        </member>
+        <member name="T:WebHDFS.FileStatus">
+            <summary>
+            File status.
+            </summary>
+        </member>
+        <member name="P:WebHDFS.FileStatus.accessTime">
+            <summary>
+            Gets or sets the access time.
+            </summary>
+            <value>The access time.</value>
+        </member>
+        <member name="P:WebHDFS.FileStatus.blockSize">
+            <summary>
+            Gets or sets the size of the block.
+            </summary>
+            <value>The size of the block.</value>
+        </member>
+        <member name="P:WebHDFS.FileStatus.group">
+            <summary>
+            Gets or sets the group.
+            </summary>
+            <value>The group.</value>
+        </member>
+        <member name="P:WebHDFS.FileStatus.length">
+            <summary>
+            Gets or sets the length.
+            </summary>
+            <value>The length.</value>
+        </member>
+        <member name="P:WebHDFS.FileStatus.modificationTime">
+            <summary>
+            Gets or sets the modification time.
+            </summary>
+            <value>The modification time.</value>
+        </member>
+        <member name="P:WebHDFS.FileStatus.owner">
+            <summary>
+            Gets or sets the owner.
+            </summary>
+            <value>The owner.</value>
+        </member>
+        <member name="P:WebHDFS.FileStatus.pathSuffix">
+            <summary>
+            Gets or sets the path suffix.
+            </summary>
+            <value>The path suffix.</value>
+        </member>
+        <member name="P:WebHDFS.FileStatus.permission">
+            <summary>
+            Gets or sets the permission.
+            </summary>
+            <value>The permission.</value>
+        </member>
+        <member name="P:WebHDFS.FileStatus.replication">
+            <summary>
+            Gets or sets the replication.
+            </summary>
+            <value>The replication.</value>
+        </member>
+        <member name="P:WebHDFS.FileStatus.type">
+            <summary>
+            Gets or sets the type.
+            </summary>
+            <value>The type.</value>
+        </member>
+        <member name="M:WebHDFS.FileStatus.ToString">
+            <summary>
+            Returns a <see cref="T:System.String"/> that represents the current <see cref="T:WebHDFS.FileStatus"/>.
+            </summary>
+            <returns>A <see cref="T:System.String"/> that represents the current <see cref="T:WebHDFS.FileStatus"/>.</returns>
+        </member>
+        <member name="T:WebHDFS.FileStatusesClass">
+            <summary>
+            https://hadoop.apache.org/docs/r2.8.0/hadoop-project-dist/hadoop-hdfs/WebHDFS.html#FileStatuses_JSON_Schema
+            </summary>
+        </member>
+        <member name="P:WebHDFS.FileStatusesClass.FileStatuses">
+            <summary>
+            Gets or sets the file statuses.
+            </summary>
+            <value>The file statuses.</value>
+        </member>
+        <member name="T:WebHDFS.FileStatuses">
+            <summary>
+            File statuses.
+            </summary>
+        </member>
+        <member name="P:WebHDFS.FileStatuses.FileStatus">
+            <summary>
+            Gets or sets the file status.
+            </summary>
+            <value>The file status.</value>
+        </member>
+        <member name="M:WebHDFS.FileStatuses.ToString">
+            <summary>
+            Returns a <see cref="T:System.String"/> that represents the current <see cref="T:WebHDFS.FileStatuses"/>.
+            </summary>
+            <returns>A <see cref="T:System.String"/> that represents the current <see cref="T:WebHDFS.FileStatuses"/>.</returns>
+        </member>
+        <member name="T:WebHDFS.PathClass">
+            <summary>
+            Path class.
+            </summary>
+        </member>
+        <member name="P:WebHDFS.PathClass.Path">
+            <summary>
+            Gets or sets the path.
+            </summary>
+            <value>The path.</value>
+        </member>
+        <member name="M:WebHDFS.PathClass.ToString">
+            <summary>
+            Returns a <see cref="T:System.String"/> that represents the current <see cref="T:WebHDFS.PathClass"/>.
+            </summary>
+            <returns>A <see cref="T:System.String"/> that represents the current <see cref="T:WebHDFS.PathClass"/>.</returns>
+        </member>
+        <member name="T:WebHDFS.RemoteExceptionClass">
+            <summary>
+            Remote exception class.
+            </summary>
+        </member>
+        <member name="P:WebHDFS.RemoteExceptionClass.RemoteException">
+            <summary>
+            Gets or sets the remote exception.
+            </summary>
+            <value>The remote exception.</value>
+        </member>
+        <member name="T:WebHDFS.RemoteException">
+            <summary>
+            Remote exception.
+            </summary>
+        </member>
+        <member name="P:WebHDFS.RemoteException.exception">
+            <summary>
+            Gets or sets the exception.
+            </summary>
+            <value>The exception.</value>
+        </member>
+        <member name="P:WebHDFS.RemoteException.javaClassName">
+            <summary>
+            Gets or sets the name of the java class.
+            </summary>
+            <value>The name of the java class.</value>
+        </member>
+        <member name="P:WebHDFS.RemoteException.message">
+            <summary>
+            Gets or sets the message.
+            </summary>
+            <value>The message.</value>
+        </member>
+        <member name="T:WebHDFS.WebHDFSClient">
+            <summary>
+            WebHDFS Client.
+            </summary>
+        </member>
+        <member name="M:WebHDFS.WebHDFSClient.#ctor(System.String,System.Net.NetworkCredential,System.Nullable{System.TimeSpan},System.Net.Http.HttpMessageHandler)">
+            <summary>
+            Initializes a new instance of the <see cref="T:WebHDFS.WebHDFSClient"/> class.
+            </summary>
+            <param name="BaseAPI">Base API.</param>
+            <param name="Credentials">Optional credentials.</param>
+            <param name="Timeout">Optional timeout.</param>
+            <param name="CustomHttpMessageHandler">Optional HttpMessageHandler.</param>
+        </member>
+        <member name="M:WebHDFS.WebHDFSClient.UploadFile(System.String,System.String,System.Boolean,System.Nullable{System.Int64},System.Nullable{System.Int16},System.String,System.Nullable{System.Int32})">
+            <summary>
+            https://hadoop.apache.org/docs/r2.8.0/hadoop-project-dist/hadoop-hdfs/WebHDFS.html#Create_and_Write_to_a_File
+            </summary>
+        </member>
+        <member name="M:WebHDFS.WebHDFSClient.WriteStream(System.IO.Stream,System.String,System.Boolean,System.Nullable{System.Int64},System.Nullable{System.Int16},System.String,System.Nullable{System.Int32})">
+            <summary>
+            https://hadoop.apache.org/docs/r2.8.0/hadoop-project-dist/hadoop-hdfs/WebHDFS.html#Create_and_Write_to_a_File
+            Note: You are responsible for closing the stream you send in.
+            </summary>
+        </member>
+        <member name="M:WebHDFS.WebHDFSClient.AppendFile(System.String,System.String,System.Nullable{System.Int32})">
+            <summary>
+            https://hadoop.apache.org/docs/r2.8.0/hadoop-project-dist/hadoop-hdfs/WebHDFS.html#Append_to_a_File
+            </summary>
+        </member>
+        <member name="M:WebHDFS.WebHDFSClient.AppendStream(System.IO.Stream,System.String,System.Nullable{System.Int32})">
+            <summary>
+            https://hadoop.apache.org/docs/r2.8.0/hadoop-project-dist/hadoop-hdfs/WebHDFS.html#Append_to_a_File
+            Note: You are responsible for closing the stream you send in.
+            </summary>
+        </member>
+        <member name="M:WebHDFS.WebHDFSClient.DownloadFile(System.String,System.String,System.Nullable{System.Int64},System.Nullable{System.Int64},System.Nullable{System.Int32})">
+            <summary>
+            https://hadoop.apache.org/docs/r2.8.0/hadoop-project-dist/hadoop-hdfs/WebHDFS.html#Open_and_Read_a_File
+            </summary>
+        </member>
+        <member name="M:WebHDFS.WebHDFSClient.ReadStream(System.IO.Stream,System.String,System.Nullable{System.Int64},System.Nullable{System.Int64},System.Nullable{System.Int32})">
+            <summary>
+            https://hadoop.apache.org/docs/r2.8.0/hadoop-project-dist/hadoop-hdfs/WebHDFS.html#Open_and_Read_a_File
+            Note: You are responsible for closing the stream you send in.
+            </summary>
+        </member>
+        <member name="M:WebHDFS.WebHDFSClient.MakeDirectory(System.String,System.String)">
+            <summary>
+            https://hadoop.apache.org/docs/r2.8.0/hadoop-project-dist/hadoop-hdfs/WebHDFS.html#Make_a_Directory
+            </summary>
+        </member>
+        <member name="M:WebHDFS.WebHDFSClient.GetFileStatus(System.String)">
+            <summary>
+            https://hadoop.apache.org/docs/r2.8.0/hadoop-project-dist/hadoop-hdfs/WebHDFS.html#Status_of_a_FileDirectory
+            </summary>
+        </member>
+        <member name="M:WebHDFS.WebHDFSClient.ListStatus(System.String)">
+            <summary>
+            https://hadoop.apache.org/docs/r2.8.0/hadoop-project-dist/hadoop-hdfs/WebHDFS.html#List_a_Directory
+            </summary>
+        </member>
+        <member name="M:WebHDFS.WebHDFSClient.GetContentSummary(System.String)">
+            <summary>
+            https://hadoop.apache.org/docs/r2.8.0/hadoop-project-dist/hadoop-hdfs/WebHDFS.html#Get_Content_Summary_of_a_Directory
+            </summary>
+        </member>
+        <member name="M:WebHDFS.WebHDFSClient.GetFileChecksum(System.String)">
+            <summary>
+            https://hadoop.apache.org/docs/r2.8.0/hadoop-project-dist/hadoop-hdfs/WebHDFS.html#Get_File_Checksum
+            </summary>
+        </member>
+        <member name="M:WebHDFS.WebHDFSClient.Rename(System.String,System.String)">
+            <summary>
+            https://hadoop.apache.org/docs/r2.8.0/hadoop-project-dist/hadoop-hdfs/WebHDFS.html#Rename_a_FileDirectory
+            </summary>
+        </member>
+        <member name="M:WebHDFS.WebHDFSClient.Delete(System.String,System.Nullable{System.Boolean})">
+            <summary>
+            https://hadoop.apache.org/docs/r2.8.0/hadoop-project-dist/hadoop-hdfs/WebHDFS.html#Delete_a_FileDirectory
+            </summary>
+        </member>
+        <member name="M:WebHDFS.WebHDFSClient.Truncate(System.String,System.Int64)">
+            <summary>
+            https://hadoop.apache.org/docs/r2.8.0/hadoop-project-dist/hadoop-hdfs/WebHDFS.html#Truncate_a_File
+            </summary>
+        </member>
+        <member name="M:WebHDFS.WebHDFSClient.Concat(System.String,System.String)">
+            <summary>
+            https://hadoop.apache.org/docs/r2.8.0/hadoop-project-dist/hadoop-hdfs/WebHDFS.html#Concat_Files
+            </summary>
+        </member>
+        <member name="M:WebHDFS.WebHDFSClient.CreateSymlink(System.String,System.String,System.Nullable{System.Boolean})">
+            <summary>
+            https://hadoop.apache.org/docs/r2.8.0/hadoop-project-dist/hadoop-hdfs/WebHDFS.html#Create_a_Symbolic_Link
+            </summary>
+        </member>
+        <member name="M:WebHDFS.WebHDFSClient.GetHomeDirectory">
+            <summary>
+            https://hadoop.apache.org/docs/r2.8.0/hadoop-project-dist/hadoop-hdfs/WebHDFS.html#Status_of_a_FileDirectory
+            </summary>
+        </member>
+        <member name="M:WebHDFS.WebHDFSClient.SetPermission(System.String,System.String)">
+            <summary>
+            https://hadoop.apache.org/docs/r2.8.0/hadoop-project-dist/hadoop-hdfs/WebHDFS.html#Set_Permission
+            </summary>
+        </member>
+        <member name="M:WebHDFS.WebHDFSClient.SetOwner(System.String,System.String,System.String)">
+            <summary>
+            https://hadoop.apache.org/docs/r2.8.0/hadoop-project-dist/hadoop-hdfs/WebHDFS.html#Set_Owner
+            </summary>
+        </member>
+        <member name="M:WebHDFS.WebHDFSClient.SetReplication(System.String,System.Nullable{System.Int16})">
+            <summary>
+            https://hadoop.apache.org/docs/r2.8.0/hadoop-project-dist/hadoop-hdfs/WebHDFS.html#Set_Replication_Factor
+            </summary>
+        </member>
+        <member name="M:WebHDFS.WebHDFSClient.SetTimes(System.String,System.Nullable{System.Int16},System.Nullable{System.Int16})">
+            <summary>
+            https://hadoop.apache.org/docs/r2.8.0/hadoop-project-dist/hadoop-hdfs/WebHDFS.html#Set_Replication_Factor
+            </summary>
+        </member>
+        <member name="M:WebHDFS.WebHDFSClient.CheckAccess(System.String,System.String)">
+            <summary>
+            https://hadoop.apache.org/docs/r2.7.3/hadoop-project-dist/hadoop-hdfs/WebHDFS.html#Check_access
+            </summary>
+        </member>
+        <member name="M:WebHDFS.WebHDFSClient.Dispose(System.Boolean)">
+            <summary>
+            This code added to correctly implement the disposable pattern.
+            </summary>
+            <param name="disposing"></param>
+        </member>
+        <member name="M:WebHDFS.WebHDFSClient.Dispose">
+            <summary>
+            This code added to correctly implement the disposable pattern.
+            </summary>
+        </member>
+        <member name="T:WebHDFS.WebHDFSHttpQueryParameter">
+            <summary>
+            Web HDFSH ttp query parameter.
+            </summary>
+        </member>
+        <member name="T:WebHDFS.WebHDFSHttpQueryParameter.Op">
+            <summary>
+            Op.
+            </summary>
+        </member>
+        <member name="P:WebHDFS.WebHDFSHttpQueryParameter.Op.Value">
+            <summary>
+            Gets the value.
+            </summary>
+            <value>The value.</value>
+        </member>
+        <member name="M:WebHDFS.WebHDFSHttpQueryParameter.SetOp(System.Collections.Specialized.NameValueCollection,WebHDFS.WebHDFSHttpQueryParameter.Op)">
+            <summary>
+            Sets the op paramter on the query.
+            https://hadoop.apache.org/docs/r2.8.0/hadoop-project-dist/hadoop-hdfs/WebHDFS.html#Op
+            </summary>
+            <returns>The query.</returns>
+            <param name="query">Query.</param>
+            <param name="operation">Operation.</param>
+        </member>
+        <member name="M:WebHDFS.WebHDFSHttpQueryParameter.SetOverwrite(System.Collections.Specialized.NameValueCollection,System.Nullable{System.Boolean})">
+            <summary>
+            Sets the overwrite parameter on the query.
+            https://hadoop.apache.org/docs/r2.8.0/hadoop-project-dist/hadoop-hdfs/WebHDFS.html#Overwrite
+            </summary>
+            <returns>The query.</returns>
+            <param name="query">Query.</param>
+            <param name="overwrite">Overwrite.</param>
+        </member>
+        <member name="M:WebHDFS.WebHDFSHttpQueryParameter.setBlocksize(System.Collections.Specialized.NameValueCollection,System.Nullable{System.Int64})">
+            <summary>
+            Sets the blocksize parameter on the query.
+            https://hadoop.apache.org/docs/r2.8.0/hadoop-project-dist/hadoop-hdfs/WebHDFS.html#Block_Size
+            </summary>
+            <returns>The query.</returns>
+            <param name="query">Query.</param>
+            <param name="blocksize">Blocksize.</param>
+        </member>
+        <member name="M:WebHDFS.WebHDFSHttpQueryParameter.SetReplication(System.Collections.Specialized.NameValueCollection,System.Nullable{System.Int16})">
+            <summary>
+            Sets the replication parameter on the query.
+            https://hadoop.apache.org/docs/r2.8.0/hadoop-project-dist/hadoop-hdfs/WebHDFS.html#Replication
+            </summary>
+            <returns>The query.</returns>
+            <param name="query">Query.</param>
+            <param name="replication">Replication.</param>
+        </member>
+        <member name="M:WebHDFS.WebHDFSHttpQueryParameter.SetPermission(System.Collections.Specialized.NameValueCollection,System.String)">
+            <summary>
+            Sets the permission parameter on the query.
+            https://hadoop.apache.org/docs/r2.8.0/hadoop-project-dist/hadoop-hdfs/WebHDFS.html#Permission
+            </summary>
+            <returns>The query.</returns>
+            <param name="query">Query.</param>
+            <param name="permission">Permission.</param>
+        </member>
+        <member name="M:WebHDFS.WebHDFSHttpQueryParameter.SetBuffersize(System.Collections.Specialized.NameValueCollection,System.Nullable{System.Int32})">
+            <summary>
+            Sets the buffersize parameter on the query.
+            https://hadoop.apache.org/docs/r2.8.0/hadoop-project-dist/hadoop-hdfs/WebHDFS.html#Buffer_Size
+            </summary>
+            <returns>The query.</returns>
+            <param name="query">Query.</param>
+            <param name="buffersize">Buffer Size.</param>
+        </member>
+        <member name="M:WebHDFS.WebHDFSHttpQueryParameter.SetOffset(System.Collections.Specialized.NameValueCollection,System.Nullable{System.Int64})">
+            <summary>
+            Sets the offset parameter on the query.
+            https://hadoop.apache.org/docs/r2.8.0/hadoop-project-dist/hadoop-hdfs/WebHDFS.html#Offset
+            </summary>
+            <returns>The query.</returns>
+            <param name="query">Query.</param>
+            <param name="offset">Offset.</param>
+        </member>
+        <member name="M:WebHDFS.WebHDFSHttpQueryParameter.SetLength(System.Collections.Specialized.NameValueCollection,System.Nullable{System.Int64})">
+            <summary>
+            Sets the length parameter on the query.
+            https://hadoop.apache.org/docs/r2.8.0/hadoop-project-dist/hadoop-hdfs/WebHDFS.html#Length
+            </summary>
+            <returns>The query.</returns>
+            <param name="query">Query.</param>
+            <param name="length">Length.</param>
+        </member>
+        <member name="M:WebHDFS.WebHDFSHttpQueryParameter.SetDestination(System.Collections.Specialized.NameValueCollection,System.String)">
+            <summary>
+            Sets the destination parameter on the query.
+            https://hadoop.apache.org/docs/r2.8.0/hadoop-project-dist/hadoop-hdfs/WebHDFS.html#Destination
+            </summary>
+            <returns>The query.</returns>
+            <param name="query">Query.</param>
+            <param name="destination">Destination.</param>
+        </member>
+        <member name="M:WebHDFS.WebHDFSHttpQueryParameter.SetRecursive(System.Collections.Specialized.NameValueCollection,System.Nullable{System.Boolean})">
+            <summary>
+            Sets the recursive parameter on the query.
+            https://hadoop.apache.org/docs/r2.8.0/hadoop-project-dist/hadoop-hdfs/WebHDFS.html#Recursive
+            </summary>
+            <returns>The query.</returns>
+            <param name="query">Query.</param>
+            <param name="recursive">Recursive.</param>
+        </member>
+        <member name="M:WebHDFS.WebHDFSHttpQueryParameter.SetNewLength(System.Collections.Specialized.NameValueCollection,System.Nullable{System.Int64})">
+            <summary>
+            Sets the newlength parameter on the query.
+            https://hadoop.apache.org/docs/r2.8.0/hadoop-project-dist/hadoop-hdfs/WebHDFS.html#New_Length
+            </summary>
+            <returns>The query.</returns>
+            <param name="query">Query.</param>
+            <param name="newlength">newlength.</param>
+        </member>
+        <member name="M:WebHDFS.WebHDFSHttpQueryParameter.SetSources(System.Collections.Specialized.NameValueCollection,System.String)">
+            <summary>
+            Sets the sources parameter on the query.
+            https://hadoop.apache.org/docs/r2.8.0/hadoop-project-dist/hadoop-hdfs/WebHDFS.html#Sources
+            </summary>
+            <returns>The query.</returns>
+            <param name="query">Query.</param>
+            <param name="sources">Sources.</param>
+        </member>
+        <member name="M:WebHDFS.WebHDFSHttpQueryParameter.SetCreateParent(System.Collections.Specialized.NameValueCollection,System.Nullable{System.Boolean})">
+            <summary>
+            Sets the createParent parameter on the query.
+            https://hadoop.apache.org/docs/r2.8.0/hadoop-project-dist/hadoop-hdfs/WebHDFS.html#Create_Parent
+            </summary>
+            <returns>The query.</returns>
+            <param name="query">Query.</param>
+            <param name="createParent">createParent.</param>
+        </member>
+        <member name="M:WebHDFS.WebHDFSHttpQueryParameter.SetOwner(System.Collections.Specialized.NameValueCollection,System.String)">
+            <summary>
+            Sets the owner parameter on the query.
+            https://hadoop.apache.org/docs/r2.8.0/hadoop-project-dist/hadoop-hdfs/WebHDFS.html#Owner
+            </summary>
+            <returns>The query.</returns>
+            <param name="query">Query.</param>
+            <param name="owner">Owner.</param>
+        </member>
+        <member name="M:WebHDFS.WebHDFSHttpQueryParameter.SetGroup(System.Collections.Specialized.NameValueCollection,System.String)">
+            <summary>
+            Sets the group parameter on the query.
+            https://hadoop.apache.org/docs/r2.8.0/hadoop-project-dist/hadoop-hdfs/WebHDFS.html#Group
+            </summary>
+            <returns>The query.</returns>
+            <param name="query">Query.</param>
+            <param name="group">Group.</param>
+        </member>
+        <member name="M:WebHDFS.WebHDFSHttpQueryParameter.SetModificationTime(System.Collections.Specialized.NameValueCollection,System.Nullable{System.Int64})">
+            <summary>
+            Sets the modificationtime parameter on the query.
+            https://hadoop.apache.org/docs/r2.8.0/hadoop-project-dist/hadoop-hdfs/WebHDFS.html#Modification_Time
+            </summary>
+            <returns>The query.</returns>
+            <param name="query">Query.</param>
+            <param name="modificationtime">modificationtime.</param>
+        </member>
+        <member name="M:WebHDFS.WebHDFSHttpQueryParameter.SetAccessTime(System.Collections.Specialized.NameValueCollection,System.Nullable{System.Int64})">
+            <summary>
+            Sets the accesstime parameter on the query.
+            https://hadoop.apache.org/docs/r2.8.0/hadoop-project-dist/hadoop-hdfs/WebHDFS.html#Access_Time
+            </summary>
+            <returns>The query.</returns>
+            <param name="query">Query.</param>
+            <param name="accesstime">accesstime.</param>
+        </member>
+        <member name="M:WebHDFS.WebHDFSHttpQueryParameter.SetFSAction(System.Collections.Specialized.NameValueCollection,System.String)">
+            <summary>
+            Sets the fsaction parameter on the query.
+            https://hadoop.apache.org/docs/r2.8.0/hadoop-project-dist/hadoop-hdfs/WebHDFS.html#Check_access
+            </summary>
+            <returns>The query.</returns>
+            <param name="query">Query.</param>
+            <param name="fsaction">fsaction.</param>
+        </member>
+    </members>
+</doc>

@@ -1,0 +1,10 @@
+C:\Users\jackf\source\repos\HaboopaConsole\HaboopaConsole\bin\Debug\HaboopaConsole.exe.config
+C:\Users\jackf\source\repos\HaboopaConsole\HaboopaConsole\bin\Debug\HaboopaConsole.exe
+C:\Users\jackf\source\repos\HaboopaConsole\HaboopaConsole\bin\Debug\HaboopaConsole.pdb
+C:\Users\jackf\source\repos\HaboopaConsole\HaboopaConsole\bin\Debug\WebHDFS.dll
+C:\Users\jackf\source\repos\HaboopaConsole\HaboopaConsole\bin\Debug\WebHDFS.xml
+C:\Users\jackf\source\repos\HaboopaConsole\HaboopaConsole\obj\Debug\HaboopaConsole.csproj.AssemblyReference.cache
+C:\Users\jackf\source\repos\HaboopaConsole\HaboopaConsole\obj\Debug\HaboopaConsole.csproj.CoreCompileInputs.cache
+C:\Users\jackf\source\repos\HaboopaConsole\HaboopaConsole\obj\Debug\HaboopaC.FE750844.Up2Date
+C:\Users\jackf\source\repos\HaboopaConsole\HaboopaConsole\obj\Debug\HaboopaConsole.exe
+C:\Users\jackf\source\repos\HaboopaConsole\HaboopaConsole\obj\Debug\HaboopaConsole.pdb
