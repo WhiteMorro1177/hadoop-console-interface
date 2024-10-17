@@ -32,6 +32,7 @@ namespace HaboopaConsole
 {
 	internal class Program
 	{
+		// private static string LOCAL_PATH = Directory.GetCurrentDirectory();
 		private static string PATH = "/";
 
 		private static string USERNAME = "";
@@ -82,6 +83,12 @@ namespace HaboopaConsole
 							}
 						} else await DELETE(extractedCommand[1]);
 						break;
+					case "lls":
+						LLS();
+						break;
+					case "lcd":
+						LCD(extractedCommand[1]);
+						break;
 				}
 
 				command = RequestCommand();
@@ -115,7 +122,7 @@ namespace HaboopaConsole
 		}
 
 
-		// main methods
+		// main server methods
 		public static async Task CD(string newPath)
 		{
 			string pathBuffer = PATH;
@@ -136,7 +143,11 @@ namespace HaboopaConsole
 			if (PATH.StartsWith("//")) PATH = PATH.Replace("//", "/");
 
 			bool isDirectoryExists = await CheckDirectory();
-			if (!isDirectoryExists) PATH = pathBuffer;
+			if (!isDirectoryExists)
+			{
+				Console.WriteLine("No such file or directory!");
+				PATH = pathBuffer;
+			}
 		}
 
 		private static async Task<bool> CheckDirectory(string path = null)
@@ -210,6 +221,52 @@ namespace HaboopaConsole
 
 			if (isDeleted.boolean) Console.WriteLine("Object deleted!");
 			else Console.WriteLine("Something went wrong");
+		}
+
+
+		// main local methods
+		public static void LCD(string path)
+		{
+			path = path.Replace("/", "\\");
+			if (path == "..")
+			{
+				string localPath = Directory.GetCurrentDirectory();
+				string newPath = Directory.GetParent(localPath).FullName;
+				Directory.SetCurrentDirectory(newPath);
+				Console.WriteLine($"Work directory path changed to {newPath}");
+			}
+			else
+			{
+				try
+				{
+					string newPath = string.Join("\\", Directory.GetCurrentDirectory(), path);
+					Directory.SetCurrentDirectory(newPath);
+					Console.WriteLine($"Work directory path changed to {newPath}");
+				}
+				catch (DirectoryNotFoundException exc)
+				{
+					Console.WriteLine("No such directory!");
+				}
+				catch (Exception exc)
+				{
+					Console.WriteLine("Unhelded exception: " + exc);
+				}
+
+			}
+		}
+
+		public static void LLS(string path = null)
+		{
+			string output = "Directory Content\t<File Name>\t-\t<File Type>\n\n";
+            if (path == null)
+			{
+				string[] files = Directory.GetFiles(Directory.GetCurrentDirectory());
+				foreach (string file in files) output += $"{file}\t-\tFILE\n";
+
+				string[] directories = Directory.GetDirectories(Directory.GetCurrentDirectory());
+				foreach (string directory in directories) output += $"{directory}\t-\tDIRECTORY\n";
+			}
+            Console.WriteLine(output);
 		}
 	}
 }
