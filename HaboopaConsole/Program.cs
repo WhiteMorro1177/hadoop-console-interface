@@ -1,12 +1,32 @@
-﻿
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
-using System.Text;
 using System.Threading.Tasks;
 using System.Net;
 using WebHDFS;
+using System.Web.UI.WebControls;
+using System.IO;
+
+/*
+
+Разработать клиент HDFS, поддерживающий операции:
+− mkdir <имя каталога в HDFS> (создание каталога в HDFS);
+− put <имя локального файла> (загрузка файла в HDFS);
+− get <имя файла в HDFS> (скачивание файла из HDFS);
+− append <имя локального файла> <имя файла в HDFS> (конкатенация файла в HDFS с локальным файлом);
+− delete <имя файла в HDFS> (удаление файла в HDFS);
+− ls (отображение содержимого текущего каталога в HDFS с разделением файлов и каталогов);
+− cd <имя каталога в HDFS> (переход в другой каталог в HDFS, ".." — на уровень выше);
+− lls (отображение содержимого текущего локального каталога с разделением файлов и каталогов);
+− lcd <имя локального каталога> (переход в другой локальный каталог, ".." — на уровень выше).
+
+Имена файлов и каталогов не содержат путей и символа "/".
+Параметры командной строки клиента: сервер, порт, имя пользователя.
+Пример запуска клиента: ./myhdfscli.rb localhost 50070 aslebedev
+Использовать WebHDFS REST API и любой язык программирования.
+
+*/
 
 namespace HaboopaConsole
 {
@@ -20,6 +40,7 @@ namespace HaboopaConsole
 		private static string URL = "";
 
 		private static HttpClient httpClient;
+		private static WebHDFSClient webHDFSClient;
 
 		static async Task Main(string[] args)
 		{
@@ -31,6 +52,8 @@ namespace HaboopaConsole
 			USERNAME = args[2];
 
 			URL = $"http://{HOST}:{PORT}/webhdfs/v1/user/{USERNAME}";
+
+			webHDFSClient = new WebHDFSClient(URL);
 
 			string command = RequestCommand();
 			while (command != "exit")
@@ -47,12 +70,25 @@ namespace HaboopaConsole
 						if (extractedCommand.Length > 1) await LS(extractedCommand[1]);
 						else await LS();
 						break;
+					case "mkdir":
+						await MKDIR(extractedCommand[1]);
+						break;
+					case "delete":
+						if (extractedCommand.Length == 3)
+						{
+							if (extractedCommand[1] == "-r")
+							{
+								await DELETE(extractedCommand[2], true);
+							}
+						} else await DELETE(extractedCommand[1]);
+						break;
 				}
 
 				command = RequestCommand();
 			}
 		}
 
+		// support methods
 		private static string RequestCommand()
 		{
 			string template = $"{USERNAME}@{HOST}:{PATH} > ";
@@ -64,6 +100,22 @@ namespace HaboopaConsole
 			return command;
 		}
 
+		private static string PathConvert(string parameter)
+		{
+			string pathToDelete = PATH;
+
+			if (parameter.StartsWith("/")) pathToDelete = parameter;
+			else
+			{
+				pathToDelete += $"/{parameter}";
+				pathToDelete = pathToDelete.Replace("//", "/");
+			}
+
+			return pathToDelete;
+		}
+
+
+		// main methods
 		public static async Task CD(string newPath)
 		{
 			string pathBuffer = PATH;
@@ -94,7 +146,7 @@ namespace HaboopaConsole
 			if (path == null) pathToCheck = PATH;
 			else pathToCheck = path;
 
-			
+
 			var response = await httpClient.GetAsync(URL + pathToCheck + "?op=GETFILESTATUS");
 			if (response.StatusCode == HttpStatusCode.OK) return true;
 			else return false;
@@ -108,7 +160,7 @@ namespace HaboopaConsole
 			{
 				if (parameter.StartsWith("/")) pathToCheck = parameter;
 				else pathToCheck += $"/{parameter}";
-				
+
 				bool isDirectoryExists = await CheckDirectory(pathToCheck);
 				if (!isDirectoryExists)
 				{
@@ -117,117 +169,47 @@ namespace HaboopaConsole
 				}
 			}
 
-			WebHDFSClient webHDFSClient = new WebHDFSClient(URL);
 			FileStatuses fileStatuses = await webHDFSClient.ListStatus(pathToCheck);
 
 			string output = "Directory content:\n<File Name>\t-\t<File Type>\n\n";
 
 			foreach (FileStatus file in fileStatuses.FileStatus) output += $"{file.pathSuffix}\t\t-\t{file.type}\n";
-			
+
 			Console.WriteLine(output);
 		}
-	}
-}
 
-/*
- using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Net.Http;
-
-namespace HaboopaConsole
-{
-  internal class Program
-  {
-	private static string PATH = "/";
-
-	private static string USERNAME = "";
-	private static string HOST = "";
-	private static string PORT = "";
-	private static string URL = "";
-
-	private static HttpClient client;
-
-	static async Task Main(string[] args)
-	{
-	  client = new HttpClient();
-	  if (args.Length == 0) return;
-	  // extract args
-	  HOST = args[0];
-	  PORT = args[1];
-	  USERNAME = args[2];
-
-	  URL = $"http://{HOST}:{PORT}/webhdfs/v1/user/{USERNAME}";
-
-	  string command = RequestCommand();
-	  while (command != "exit")
-	  {
-		string[] extractedCommand = command.Split(' ');
-		Console.WriteLine();
-
-		switch (extractedCommand[0])
+		public static async Task MKDIR(string parameter)
 		{
-		  case "cd":
-			CD(extractedCommand[1]);
-			break;
-		  case "ls":
-			await LS(); 
-						break;
-		}
+			string pathToMake = PathConvert(parameter);
 
-		command = RequestCommand();
-	  }
-	}
-
-	private static string RequestCommand()
-	{
-	  string template = $"{USERNAME}@{HOST}:{PATH} > ";
-	  Console.Write(template);
-	  
-	  string command = Console.ReadLine();
-	  if (command.StartsWith(template)) command = command.Substring(template.Length);
-
-	  return command;
-	}
-
-	public static void CD(string newPath)
-	{
-	  if (string.IsNullOrEmpty(newPath)) return;
-	  if (newPath == "..")
-	  {
-		string[] splittedPath = PATH.Split(new[] { "/" }, StringSplitOptions.RemoveEmptyEntries);
-		Array.Resize(ref splittedPath, splittedPath.Length - 1);
-
-		PATH = "/" + string.Join("/", splittedPath);
-	  } else
-	  {
-		if (newPath.StartsWith("/") || PATH == "/") PATH = $"/{newPath}";
-		else PATH += $"/{newPath}";
-	  }
-	  if (PATH.StartsWith("//")) PATH = PATH.Replace("//", "/");
-	}
-
-	public static async Task LS()
-	{
-	  // curl -i "http://<HOST>:<PORT>/webhdfs/v1/<PATH>?op=LISTSTATUS"
-	  string uri = "";
-	  if (PATH != "/")
-	  {
-		uri = $"{URL}{PATH}?op=LISTSTATUS";
-	  } else
-	  {
-		uri = $"{URL}?op=LISTSTATUS";
-	  }
-
-			await Console.Out.WriteLineAsync(uri);
-	  using (var response = await client.GetAsync(uri))
-	  {
-		var content = await response.Content.ReadAsStringAsync();
-				await Console.Out.WriteLineAsync(content);
+			bool isDirectoryExists = await CheckDirectory(pathToMake);
+			if (isDirectoryExists)
+			{
+				Console.WriteLine("Directory already exist!");
+				return;
 			}
+            
+			WebHDFS.Boolean isDirectoryCreated = await webHDFSClient.MakeDirectory(pathToMake);
+
+			if (isDirectoryCreated.boolean) Console.WriteLine("Directory created!");
+			else Console.WriteLine("Something went wrong");
 		}
-  }
+
+		public static async Task DELETE(string path, bool recursive = false)
+		{
+			string pathToDelete = PathConvert(path);
+
+			bool isDirectoryExists = await CheckDirectory(pathToDelete);
+			if (!isDirectoryExists)
+			{
+				Console.WriteLine("Directory doesn't exist!");
+				return;
+			}
+
+			WebHDFS.Boolean isDeleted = await webHDFSClient.Delete(pathToDelete, recursive);
+
+			if (isDeleted.boolean) Console.WriteLine("Object deleted!");
+			else Console.WriteLine("Something went wrong");
+		}
+	}
 }
- */
