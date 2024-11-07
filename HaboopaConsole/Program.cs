@@ -7,19 +7,21 @@ using System.Net;
 using WebHDFS;
 using System.Web.UI.WebControls;
 using System.IO;
+using System.Web.UI.WebControls.WebParts;
+using System.Diagnostics;
 
 /*
 
 Разработать клиент HDFS, поддерживающий операции:
-− mkdir <имя каталога в HDFS> (создание каталога в HDFS);
-− put <имя локального файла> (загрузка файла в HDFS);
++ mkdir <имя каталога в HDFS> (создание каталога в HDFS);
++ put <имя локального файла> (загрузка файла в HDFS);
 − get <имя файла в HDFS> (скачивание файла из HDFS);
 − append <имя локального файла> <имя файла в HDFS> (конкатенация файла в HDFS с локальным файлом);
-− delete <имя файла в HDFS> (удаление файла в HDFS);
-− ls (отображение содержимого текущего каталога в HDFS с разделением файлов и каталогов);
-− cd <имя каталога в HDFS> (переход в другой каталог в HDFS, ".." — на уровень выше);
-− lls (отображение содержимого текущего локального каталога с разделением файлов и каталогов);
-− lcd <имя локального каталога> (переход в другой локальный каталог, ".." — на уровень выше).
++ delete <имя файла в HDFS> (удаление файла в HDFS);
++ ls (отображение содержимого текущего каталога в HDFS с разделением файлов и каталогов);
++ cd <имя каталога в HDFS> (переход в другой каталог в HDFS, ".." — на уровень выше);
++ lls (отображение содержимого текущего локального каталога с разделением файлов и каталогов);
++ lcd <имя локального каталога> (переход в другой локальный каталог, ".." — на уровень выше).
 
 Имена файлов и каталогов не содержат путей и символа "/".
 Параметры командной строки клиента: сервер, порт, имя пользователя.
@@ -32,7 +34,6 @@ namespace HaboopaConsole
 {
 	internal class Program
 	{
-		// private static string LOCAL_PATH = Directory.GetCurrentDirectory();
 		private static string PATH = "/";
 
 		private static string USERNAME = "";
@@ -45,7 +46,7 @@ namespace HaboopaConsole
 
 		static async Task Main(string[] args)
 		{
-			httpClient = new HttpClient();
+			httpClient = new HttpClient(new HttpClientHandler() { AllowAutoRedirect = false });
 			if (args.Length == 0) return;
 			// extract args
 			HOST = args[0];
@@ -54,12 +55,25 @@ namespace HaboopaConsole
 
 			URL = $"http://{HOST}:{PORT}/webhdfs/v1/user/{USERNAME}";
 
-			webHDFSClient = new WebHDFSClient(URL);
+			webHDFSClient = new WebHDFSClient(URL, new NetworkCredential() { UserName = USERNAME });
 
 			string command = RequestCommand();
 			while (command != "exit")
 			{
-				string[] extractedCommand = command.Split(' ');
+				List<string> extractedCommand = new List<string>();
+				//string[] extractedCommand = command.Split(' ');
+				if (command.Contains("\""))
+				{
+					// filename contains spaces
+					string[] filenameExtraction = command.Split(new[] { "\"" }, StringSplitOptions.RemoveEmptyEntries);
+					foreach (string part in filenameExtraction[0].Split(new[] { " " }, StringSplitOptions.RemoveEmptyEntries))
+					{
+						extractedCommand.Add(part);
+					}
+					extractedCommand.AddRange(filenameExtraction);
+				}
+				else extractedCommand = command.Split(' ').ToList();
+
 				Console.WriteLine();
 
 				switch (extractedCommand[0])
@@ -68,29 +82,61 @@ namespace HaboopaConsole
 						await CD(extractedCommand[1]);
 						break;
 					case "ls":
-						if (extractedCommand.Length > 1) await LS(extractedCommand[1]);
-						else await LS();
+						Dictionary<string, string> lsResult;
+						if (extractedCommand.Count > 1) lsResult = await LS(extractedCommand[1]);
+						else lsResult = await LS();
+
+						if (lsResult == null) Console.WriteLine("Directory does not exist!");
+						else
+						{
+							Console.WriteLine(lsResult["header"]);
+							// foreach (var record in lsResult) Console.WriteLine($"{record.Key}\t\t\t\t{record.Value}");
+							for (int i = 1; i < lsResult.Count; i++)
+							{
+								var currentKey = lsResult.Keys.ToList()[i];
+								Console.WriteLine($"{currentKey}\t\t{lsResult[currentKey]}");
+							}
+						}
 						break;
 					case "mkdir":
 						await MKDIR(extractedCommand[1]);
 						break;
 					case "delete":
-						if (extractedCommand.Length == 3)
+						if (extractedCommand.Count == 3)
 						{
 							if (extractedCommand[1] == "-r")
 							{
 								await DELETE(extractedCommand[2], true);
 							}
-						} else await DELETE(extractedCommand[1]);
+							else Console.WriteLine($"Flag '{extractedCommand[1]}' not found in this command");
+						}
+						else await DELETE(extractedCommand[1]);
+						break;
+					case "put":
+						if (extractedCommand.Count == 3)
+						{
+							if (extractedCommand[1] == "--no-overwrite")
+							{
+								await PUT(extractedCommand[2], false);
+							}
+							else Console.WriteLine($"Flag '{extractedCommand[1]}' not found in this command");
+						}
+						else await PUT(extractedCommand[1]);
+						break;
+					case "get":
+						await GET(extractedCommand[1]);
+						break;
+					case "append":
+						await APPEND(extractedCommand[1], extractedCommand[2]);
 						break;
 					case "lls":
 						LLS();
 						break;
 					case "lcd":
+						if (extractedCommand.Count <= 1) break;
 						LCD(extractedCommand[1]);
 						break;
 				}
-
 				command = RequestCommand();
 			}
 		}
@@ -109,16 +155,15 @@ namespace HaboopaConsole
 
 		private static string PathConvert(string parameter)
 		{
-			string pathToDelete = PATH;
+			string convertedPath = PATH;
 
-			if (parameter.StartsWith("/")) pathToDelete = parameter;
+			if (parameter.StartsWith("/")) convertedPath = parameter;
 			else
 			{
-				pathToDelete += $"/{parameter}";
-				pathToDelete = pathToDelete.Replace("//", "/");
+				convertedPath += $"/{parameter}".Replace("//", "/");
 			}
 
-			return pathToDelete;
+			return convertedPath;
 		}
 
 
@@ -163,8 +208,9 @@ namespace HaboopaConsole
 			else return false;
 		}
 
-		public static async Task LS(string parameter = null)
+		public static async Task<Dictionary<string, string>> LS(string parameter = null)
 		{
+			// convert path and check directory
 			string pathToCheck = "";
 			if (parameter == null) pathToCheck = PATH;
 			else
@@ -173,20 +219,21 @@ namespace HaboopaConsole
 				else pathToCheck += $"/{parameter}";
 
 				bool isDirectoryExists = await CheckDirectory(pathToCheck);
-				if (!isDirectoryExists)
-				{
-					Console.WriteLine("Directory doesn't exist!");
-					return;
-				}
+				if (!isDirectoryExists) return null;
+
 			}
 
+			Dictionary<string, string> result = new Dictionary<string, string>()
+			{
+				{ "header", "Directory content:\n<File Name>\t\t<File Type>\n" }
+			};
+
 			FileStatuses fileStatuses = await webHDFSClient.ListStatus(pathToCheck);
+			// string output = "Directory content:\n<File Name>\t\t\t\t<File Type>\n\n";
 
-			string output = "Directory content:\n<File Name>\t-\t<File Type>\n\n";
+			foreach (FileStatus file in fileStatuses.FileStatus) result.Add(file.pathSuffix, file.type); //output += $"{file.pathSuffix}\t\t\t\t\t{file.type}\n";
 
-			foreach (FileStatus file in fileStatuses.FileStatus) output += $"{file.pathSuffix}\t\t-\t{file.type}\n";
-
-			Console.WriteLine(output);
+			return result;
 		}
 
 		public static async Task MKDIR(string parameter)
@@ -199,8 +246,8 @@ namespace HaboopaConsole
 				Console.WriteLine("Directory already exist!");
 				return;
 			}
-            
-			WebHDFS.Boolean isDirectoryCreated = await webHDFSClient.MakeDirectory(pathToMake);
+
+			WebHDFS.Boolean isDirectoryCreated = await webHDFSClient.MakeDirectory(pathToMake.Replace("//", "/"));
 
 			if (isDirectoryCreated.boolean) Console.WriteLine("Directory created!");
 			else Console.WriteLine("Something went wrong");
@@ -223,6 +270,134 @@ namespace HaboopaConsole
 			else Console.WriteLine("Something went wrong");
 		}
 
+		public static async Task PUT(string filename, bool isOverwrite = true)
+		{
+			string[] existedFiles = Directory.GetFiles(Directory.GetCurrentDirectory());
+
+			if (existedFiles.Contains(Path.GetFullPath(filename)))
+			{
+				string path = (PATH == "/") ? "" : PATH;
+				var response = await httpClient.PutAsync($"{URL}{path}/{filename}?op=CREATE&overwrite={isOverwrite}", null);
+				if (response.StatusCode == HttpStatusCode.TemporaryRedirect)
+				{
+					using (Stream fileStream = File.OpenRead(filename))
+					{
+						Uri newURL = response.Headers.Location;
+						response = await httpClient.PutAsync(newURL, new StreamContent(fileStream));
+						if (response.StatusCode == HttpStatusCode.Created)
+						{
+							Console.WriteLine($"File \'{Path.GetFileName(filename)}\' was uploaded in \'{PATH}\'");
+						}
+						else
+						{
+							Console.WriteLine($"Something went wrong");
+						}
+					}
+				}
+			}
+		}
+
+		public static async Task GET(string filename, bool isOverwriteLocalfile = false)
+		{
+			HttpContent fileContent = null;
+			Dictionary<string, string> existedFiles = await LS();
+
+			if (!existedFiles.ContainsKey(filename))
+			{
+				Console.WriteLine("File does not exist!");
+				return;
+			}
+
+			string path = (PATH == "/") ? "" : PATH;
+			var response = await httpClient.GetAsync($"{URL}{path}/{filename}?op=OPEN");
+			if (response.StatusCode == HttpStatusCode.TemporaryRedirect)
+			{
+				Uri newURL = response.Headers.Location;
+				response = await httpClient.GetAsync(newURL);
+
+				if (response.StatusCode == HttpStatusCode.OK)
+				{
+					fileContent = response.Content;
+				}
+				else Console.WriteLine("Something went wrong");
+			}
+			else
+			{
+				fileContent = null; 
+				Console.WriteLine("Something went wrong");
+			}
+
+			if (fileContent == null) return;
+
+			// check local file
+			string[] existedLocalFiles = Directory.GetFiles(Directory.GetCurrentDirectory());
+			string localFilePath = Path.Combine(Directory.GetCurrentDirectory(), filename);
+
+			if (existedLocalFiles.Contains(localFilePath))
+			{
+				File.Delete(localFilePath);	
+			}
+
+			byte[] fileContentAsBytes = await fileContent.ReadAsByteArrayAsync();
+			File.WriteAllBytes(localFilePath, fileContentAsBytes);
+		}
+
+		public static async Task APPEND(string localFileName, string hdfsFileName)
+		{
+			string[] existedLocalFiles = Directory.GetFiles(Directory.GetCurrentDirectory());
+			Dictionary<string, string> existedHdfsFiles = await LS();
+
+			if (!existedLocalFiles.Contains(Path.GetFullPath(localFileName)))
+			{
+                Console.WriteLine("Local file does not exist");
+				return;
+			}
+
+			if (!existedHdfsFiles.ContainsKey(hdfsFileName))
+			{
+				Console.WriteLine("HDFS File does not exist!");
+				return;
+			}
+
+			string path = (PATH == "/") ? "" : PATH;
+			var response = await httpClient.PostAsync($"{URL}{path}/{hdfsFileName}?op=APPEND", null);
+
+			if (response.StatusCode == HttpStatusCode.TemporaryRedirect)
+			{
+				using (Stream fileStream = File.OpenRead(localFileName))
+				{
+					Uri newURL = response.Headers.Location;
+					response = await httpClient.PostAsync(newURL, new StreamContent(fileStream));
+					if (response.StatusCode == HttpStatusCode.OK)
+					{
+						Console.WriteLine($"File \'{Path.GetFileName(localFileName)}\' was appended to \'{hdfsFileName}\'");
+					}
+					else
+					{
+						Console.WriteLine($"Something went wrong - Status: {response.StatusCode}");
+					}
+				}
+			}
+
+			//var response = await httpClient.PostAsync($"{URL}{path}/{filename}?op=APPEND", null);
+			//if (response.StatusCode == HttpStatusCode.TemporaryRedirect)
+			//{
+			//	using (Stream fileStream = File.OpenRead(filename))
+			//	{
+			//		Uri newURL = response.Headers.Location;
+			//		response = await httpClient.PutAsync(newURL, new StreamContent(fileStream));
+			//		if (response.StatusCode == HttpStatusCode.Created)
+			//		{
+			//			Console.WriteLine($"File \'{Path.GetFileName(filename)}\' was uploaded in \'{PATH}\'");
+			//		}
+			//		else
+			//		{
+			//			Console.WriteLine($"Something went wrong");
+			//		}
+			//	}
+			//}
+
+		}
 
 		// main local methods
 		public static void LCD(string path)
@@ -258,7 +433,7 @@ namespace HaboopaConsole
 		public static void LLS(string path = null)
 		{
 			string output = "Directory Content\t<File Name>\t-\t<File Type>\n\n";
-            if (path == null)
+			if (path == null)
 			{
 				string[] files = Directory.GetFiles(Directory.GetCurrentDirectory());
 				foreach (string file in files) output += $"{file}\t-\tFILE\n";
@@ -266,7 +441,7 @@ namespace HaboopaConsole
 				string[] directories = Directory.GetDirectories(Directory.GetCurrentDirectory());
 				foreach (string directory in directories) output += $"{directory}\t-\tDIRECTORY\n";
 			}
-            Console.WriteLine(output);
+			Console.WriteLine(output);
 		}
 	}
 }
